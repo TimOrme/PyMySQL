@@ -7,6 +7,7 @@ Copyright (c) 2001-2013 Python Software Foundation; All Rights Reserved.
 from socket import *
 import io
 import errno
+import gevent
 
 __all__ = ['SocketIO']
 
@@ -57,7 +58,7 @@ class SocketIO(io.RawIOBase):
         while True:
             try:
                 return self._sock.recv_into(b)
-            except timeout:
+            except (timeout, gevent.Timeout):
                 self._timeout_occurred = True
                 raise
             except error as e:
